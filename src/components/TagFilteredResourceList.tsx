@@ -15,10 +15,24 @@ export default function TagFilteredResourceList({
 	processedPostListItems,
 }: TagFilteredResourceListProps) {
 	const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
+	const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
 
 	const tagGrouping = useMemo(() => {
 		return organizeTagsByCategories(allTags);
 	}, [allTags]);
+
+	// Auto-expand categories that have selected tags
+	useMemo(() => {
+		const newExpandedCategories = new Set<string>();
+		selectedTags.forEach((tag) => {
+			tagGrouping.categories.forEach((category) => {
+				if (category.tags.includes(tag)) {
+					newExpandedCategories.add(category.id);
+				}
+			});
+		});
+		setExpandedCategories(newExpandedCategories);
+	}, [selectedTags, tagGrouping.categories]);
 
 	const filteredPostListItems = useMemo(() => {
 		if (selectedTags.size === 0 || !processedPostListItems) {
@@ -69,6 +83,18 @@ export default function TagFilteredResourceList({
 		setSelectedTags(new Set());
 	}, []);
 
+	const handleCategoryToggle = useCallback((categoryId: string) => {
+		setExpandedCategories((prev) => {
+			const newSet = new Set(prev);
+			if (newSet.has(categoryId)) {
+				newSet.delete(categoryId);
+			} else {
+				newSet.add(categoryId);
+			}
+			return newSet;
+		});
+	}, []);
+
 	const resourceCount = useMemo(() => {
 		const countRecursive = (items: PostListItem[]): number => {
 			return items.reduce((count, item) => {
@@ -111,52 +137,85 @@ export default function TagFilteredResourceList({
 
 					<div className="resource-tag-filter-tags">
 						{/* Render categorized tags */}
-						{tagGrouping.categories.map((category) => (
-							<div key={category.id} className="tag-category-group">
-								<div className="tag-category-header">
-									<h5 className="tag-category-title" style={{ color: category.color }}>
-										{category.name}
-									</h5>
-									{category.description && (
-										<span className="tag-category-description">
-											{category.description}
+						{tagGrouping.categories.map((category) => {
+							const isExpanded = expandedCategories.has(category.id);
+							const hasSelectedTags = category.tags.some(tag => selectedTags.has(tag));
+
+							return (
+								<div key={category.id} className="tag-category-group">
+									<button
+										type="button"
+										className="tag-category-header"
+										onClick={() => handleCategoryToggle(category.id)}
+										aria-expanded={isExpanded}
+									>
+										<div className="tag-category-header-content">
+											<h5 className="tag-category-title" style={{ color: category.color }}>
+												{category.name}
+												{hasSelectedTags && <span className="tag-category-selected-indicator">•</span>}
+											</h5>
+											<span className="tag-category-count">
+												{category.tags.filter(tag => selectedTags.has(tag)).length}/{category.tags.length}
+											</span>
+										</div>
+										<span className={`tag-category-toggle ${isExpanded ? 'expanded' : ''}`}>
+											▼
 										</span>
+									</button>
+									{isExpanded && (
+										<div className="tag-category-tags">
+											{category.tags.map((tag) => (
+												<TagBadge
+													key={tag}
+													tag={tag}
+													variant="filter"
+													isSelected={selectedTags.has(tag)}
+													onClick={handleTagToggle}
+												/>
+											))}
+										</div>
 									)}
 								</div>
-								<div className="tag-category-tags">
-									{category.tags.map((tag) => (
-										<TagBadge
-											key={tag}
-											tag={tag}
-											variant="filter"
-											isSelected={selectedTags.has(tag)}
-											onClick={handleTagToggle}
-										/>
-									))}
-								</div>
-							</div>
-						))}
+							);
+						})}
 
 						{/* Render uncategorized tags if any */}
 						{tagGrouping.uncategorizedTags.length > 0 && (
 							<div className="tag-category-group">
-								<div className="tag-category-header">
-									<h5 className="tag-category-title">Other</h5>
-									<span className="tag-category-description">
-										Additional tags
+								<button
+									type="button"
+									className="tag-category-header"
+									onClick={() => handleCategoryToggle('uncategorized')}
+									aria-expanded={expandedCategories.has('uncategorized')}
+								>
+									<div className="tag-category-header-content">
+										<h5 className="tag-category-title">
+											Other
+											{tagGrouping.uncategorizedTags.some(tag => selectedTags.has(tag)) && (
+												<span className="tag-category-selected-indicator">•</span>
+											)}
+										</h5>
+										<span className="tag-category-count">
+											{tagGrouping.uncategorizedTags.filter(tag => selectedTags.has(tag)).length}/{tagGrouping.uncategorizedTags.length}
+										</span>
+									</div>
+									<span className={`tag-category-toggle ${expandedCategories.has('uncategorized') ? 'expanded' : ''}`}>
+										▼
 									</span>
-								</div>
-								<div className="tag-category-tags">
-									{tagGrouping.uncategorizedTags.map((tag) => (
-										<TagBadge
-											key={tag}
-											tag={tag}
-											variant="filter"
-											isSelected={selectedTags.has(tag)}
-											onClick={handleTagToggle}
-										/>
-									))}
-								</div>
+								</button>
+								{expandedCategories.has('uncategorized') && (
+									<div className="tag-category-tags">
+										{tagGrouping.uncategorizedTags.map((tag) => (
+											<TagBadge
+												key={tag}
+												tag={tag}
+												variant="filter"
+												isSelected={selectedTags.has(tag)}
+												onClick={handleTagToggle}
+											/>
+										))}
+									</div>
+								)}
 							</div>
 						)}
 					</div>

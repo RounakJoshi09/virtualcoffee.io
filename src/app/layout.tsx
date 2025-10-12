@@ -22,7 +22,7 @@ export default function RootLayout({
 }) {
 	return (
 		<>
-			<html lang="en" className="h-full bg-gray-100">
+			<html lang="en" className="h-full bg-gray-100" suppressHydrationWarning>
 				<head>
 					{/* @ts-ignore */}
 					{buildUrls.NETLIFY && buildUrls.CONTEXT === 'production' && (
@@ -46,7 +46,7 @@ export default function RootLayout({
 
 					<footer className="py-5 text-center text-muted bg-white border-top border-secondary main-footer">
 						<ul>
-							<li>&copy; {new Date().getFullYear()} Virtual Coffee</li>
+							<li>&copy; <time suppressHydrationWarning>{new Date().getFullYear()}</time> Virtual Coffee</li>
 							<li>
 								<a href="mailto:hello@virtualcoffee.io">Contact Us</a>
 							</li>
