@@ -89,15 +89,19 @@ export default function TagFilteredResourceList({
 				<div className="resource-tag-filter-section">
 					<div className="resource-tag-filter-header">
 						<h4 className="resource-tag-filter-title">Filter by Tags</h4>
-						{selectedTags.size > 0 && (
-							<button
-								type="button"
-								className="btn btn-link btn-sm resource-tag-filter-clear"
-								onClick={handleClearAll}
-							>
-								Clear all ({selectedTags.size})
-							</button>
-						)}
+						<div className="resource-tag-filter-clear-container">
+							{selectedTags.size > 0 ? (
+								<button
+									type="button"
+									className="btn btn-link btn-sm resource-tag-filter-clear"
+									onClick={handleClearAll}
+								>
+									Clear all ({selectedTags.size})
+								</button>
+							) : (
+								<span className="resource-tag-filter-clear-placeholder"></span>
+							)}
+						</div>
 					</div>
 
 					<div className="resource-tag-filter-tags">
@@ -112,8 +116,8 @@ export default function TagFilteredResourceList({
 						))}
 					</div>
 
-					{selectedTags.size > 0 && (
-						<div className="resource-tag-filter-status">
+					<div className="resource-tag-filter-status">
+						{selectedTags.size > 0 ? (
 							<span className="text-muted">
 								Showing {resourceCount} of {totalResourceCount} resources
 								{selectedTags.size > 0 && (
@@ -126,8 +130,10 @@ export default function TagFilteredResourceList({
 									</>
 								)}
 							</span>
-						</div>
-					)}
+						) : (
+							<span className="resource-tag-filter-status-placeholder"></span>
+						)}
+					</div>
 				</div>
 			)}
 
