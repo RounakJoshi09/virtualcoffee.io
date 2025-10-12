@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import PostList, { PostListItem } from '@/components/PostList';
 import TagBadge from '@/components/TagBadge';
+import GroupedTagFilter from '@/components/GroupedTagFilter';
 
 interface TagFilteredResourceListProps {
 	allTags: string[];
@@ -105,15 +106,11 @@ export default function TagFilteredResourceList({
 					</div>
 
 					<div className="resource-tag-filter-tags">
-						{allTags.map((tag) => (
-							<TagBadge
-								key={tag}
-								tag={tag}
-								variant="filter"
-								isSelected={selectedTags.has(tag)}
-								onClick={handleTagToggle}
-							/>
-						))}
+						<GroupedTagFilter
+							allTags={allTags}
+							selectedTags={selectedTags}
+							onTagToggle={handleTagToggle}
+						/>
 					</div>
 
 					<div className="resource-tag-filter-status">

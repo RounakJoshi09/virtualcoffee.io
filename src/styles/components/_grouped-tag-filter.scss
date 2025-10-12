@@ -1,0 +1,65 @@
+.grouped-tag-filter {
+  .tag-group {
+    margin-bottom: 1.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .tag-group-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--bs-secondary);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--bs-border-color);
+      padding-bottom: 0.25rem;
+    }
+
+    .tag-group-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    // Color-coded group styling
+    &.tag-group-blue .tag-group-label {
+      color: var(--bs-primary);
+    }
+
+    &.tag-group-green .tag-group-label {
+      color: var(--bs-success);
+    }
+
+    &.tag-group-purple .tag-group-label {
+      color: var(--bs-info);
+    }
+
+    &.tag-group-orange .tag-group-label {
+      color: var(--bs-warning);
+    }
+
+    &.tag-group-pink .tag-group-label {
+      color: #d63384; // Bootstrap pink
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .grouped-tag-filter {
+    .tag-group {
+      margin-bottom: 1rem;
+
+      .tag-group-label {
+        font-size: 0.85rem;
+        margin-bottom: 0.375rem;
+      }
+
+      .tag-group-tags {
+        gap: 0.375rem;
+      }
+    }
+  }
+}

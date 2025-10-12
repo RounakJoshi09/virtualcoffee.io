@@ -43,10 +43,10 @@ function getFile(slug: string) {
 		}: {
 			default: React.ComponentType<MDXProps>;
 		} = slug
-			? require(
+				? require(
 					`@/content/resources/${slug}${file.isIndex ? '/index' : ''}.mdx`,
 				)
-			: require('@/content/resources/index.mdx');
+				: require('@/content/resources/index.mdx');
 		return { ...file, Component };
 	} else {
 		return null;
@@ -151,7 +151,6 @@ export default async function Page({
 						</nav>
 					</div>
 				</div>
-
 				<file.Component />
 			</div>
 		</DefaultLayout>
