@@ -46,8 +46,8 @@
 		"mdast-util-toc": "^7.1.0",
 		"next": "^15.5.7",
 		"npm-watch": "^0.13.0",
-		"react": "19.2.0",
-		"react-dom": "19.2.0",
+		"react": "^19.2.1",
+		"react-dom": "^19.2.1",
 		"react-leaflet": "^5.0.0",
 		"react-leaflet-cluster": "^3.1.1",
 		"rehype-autolink-headings": "^6.1.1",
@@ -79,7 +79,7 @@
 		"cross-env": "^10.1.0",
 		"esbuild": "^0.25.12",
 		"eslint": "^9.39.1",
-		"eslint-config-next": "15.5.5",
+		"eslint-config-next": "^15.5.7",
 		"netlify-cli": "^23.12.3",
 		"postcss": "^8.5.6",
 		"prettier": "^3.7.4",
@@ -88,10 +88,5 @@
 		"tsx": "^4.21.0",
 		"typescript": "^5.9.3"
 	},
-	"overrides": {
-		"@types/react": "npm:types-react@rc",
-		"@types/react-dom": "npm:types-react-dom@rc",
-		"react": "rc",
-		"react-dom": "rc"
-	}
+	"overrides": {}
 }
