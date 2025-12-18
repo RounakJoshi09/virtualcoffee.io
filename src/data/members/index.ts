@@ -21,25 +21,18 @@ export interface MembersResponse {
 	members: MemberList;
 }
 
-// This file is an On-Demand Builder
-// It allows us to cache third-party data for a specified amount of time
-// Any deploys will clear the cache
-// Read more here: https://docs.netlify.com/configure-builds/on-demand-builders/
-
 function nonNullable<T>(value: T): value is NonNullable<T> {
 	return value !== null && value !== undefined;
 }
 
-async function getMembersInternal(): Promise<MembersResponse> {
-	const userData = await loadUserData();
-
-	return userData;
-}
-
 export const getMembers = unstable_cache(
-	getMembersInternal,
-	['members'],
-	{ revalidate: 86400, tags: ['members'] }
+	async (): Promise<MembersResponse> => {
+		const userData = await loadUserData();
+
+		return userData;
+	},
+	[],
+	{ revalidate: 86400, tags: ['members'] },
 );
 
 async function parseMarkdown(markdown: string) {

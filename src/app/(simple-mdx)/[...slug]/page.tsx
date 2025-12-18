@@ -9,11 +9,11 @@ import { MDXProps } from 'mdx/types';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-// ISR: Revalidate every 24 hours
-export const revalidate = 86400;
+export const dynamicParams = false;
+export const dynamic = 'force-static';
 
-export function generateStaticParams() {
-	const allFiles = loadMdxDirectory({
+export async function generateStaticParams() {
+	const allFiles = await loadMdxDirectory({
 		baseDirectory: 'content/simple-mdx-pages',
 	});
 
@@ -22,10 +22,8 @@ export function generateStaticParams() {
 	}));
 }
 
-export const dynamicParams = true;
-
 async function getFile(slug: string) {
-	const file = loadMdxRouteFileAttributes({
+	const file = await loadMdxRouteFileAttributes({
 		slug: `content/simple-mdx-pages/${slug}`,
 	});
 	if (file) {
@@ -50,7 +48,7 @@ export async function generateMetadata({
 		notFound();
 	}
 
-	return createMetaData({
+	return await createMetaData({
 		title: file.meta.title,
 		description: file.meta.description,
 		Hero: file.hero?.Hero,
